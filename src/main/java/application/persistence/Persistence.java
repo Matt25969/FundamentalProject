@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import application.models.Item;
+import application.models.Order;
 import application.models.User;
 
 public class Persistence {
@@ -113,6 +114,32 @@ public class Persistence {
 		return retVal;
 	}
 
+	public Map<Integer, Order> displayOrders() {
+
+		Map<Integer, Order> orderMap = new HashMap<>();
+		try (Statement statement = getConnection().createStatement()) {
+			ResultSet rs = statement.executeQuery(
+					"SELECT o.id, o.userID, o.value, user.name FROM `Order` AS o INNER JOIN user ON user.ID=o.userID");
+			Order tempOrder = new Order();
+
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				int userID = rs.getInt("userID");
+				double value = rs.getDouble("value");
+				System.out.println("ID: " + id + ", userID: " + userID + ", value: " + value);
+				tempOrder.setUserID(userID);
+				tempOrder.setValue(value);
+				orderMap.put(id, tempOrder);
+			}
+
+			rs.close();
+
+		} catch (Exception e) {
+			MyLogger.getLogger().warning(e.getMessage());
+		}
+		return orderMap;
+	}
+
 	public void clearDatabase() {
 		try (Statement statement = getConnection().createStatement()) {
 			statement.execute("TRUNCATE TABLE user");
@@ -121,6 +148,17 @@ public class Persistence {
 		}
 		try (Statement statement = getConnection().createStatement()) {
 			statement.execute("TRUNCATE TABLE item");
+		} catch (Exception e) {
+			MyLogger.getLogger().warning(e.getMessage());
+		}
+
+	}
+
+	public void saveOrder(int userID, double finalCost) {
+
+		try (Statement statement = getConnection().createStatement()) {
+			statement.executeUpdate(
+					"INSERT INTO `Order` (userID, value)" + "VALUES ( " + userID + ", " + finalCost + ")");
 		} catch (Exception e) {
 			MyLogger.getLogger().warning(e.getMessage());
 		}

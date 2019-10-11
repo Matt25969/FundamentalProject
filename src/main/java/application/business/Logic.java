@@ -68,10 +68,23 @@ public class Logic {
 		}
 		return cost;
 	}
+	
+	public void saveOrder(int userID, double finalCost) {
+		
+		persistence.saveOrder(userID, finalCost);
+		
+	}
 
 	public void clearDatabase() {
 
 		persistence.clearDatabase();
 
 	}
+
+	public void displayOrders() {
+		persistence.displayOrders();
+		
+	}
+
+	
 }

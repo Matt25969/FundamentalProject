@@ -4,7 +4,6 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import application.business.Logic;
-import application.business.LogicTest;
 
 public class TextInput implements Input {
 	
@@ -49,7 +48,13 @@ public class TextInput implements Input {
 		System.out.println("Would you like to add speedy delivery? (Y or N)");
 		String deliveryChoice = sc1.nextLine();
 		double finalCost = logic.applyDeliveryCharge(deliveryChoice, cost);
-		System.out.println("The final cost for this order is " + finalCost);
+		System.out.println("The final cost for this order is " + finalCost + ", would you like to save this order?");
+		String saveOrderChoice = sc1.nextLine();
+		if (saveOrderChoice.equals("Y")) {
+			System.out.println("Type the ID of the User you want to save this order too");
+			int userID = Integer.parseInt(sc1.nextLine());
+			logic.saveOrder(userID,finalCost);
+		}
 	}
 
 	@Override
@@ -59,7 +64,7 @@ public class TextInput implements Input {
 			do {
 				try {
 					System.out.println(
-							"pick option 1 (Create New Item) 2 (Create New User) 3 (Display Items) 4 (Display Users) 5 (Calculate Cost)");
+							"pick option 1 (Create New Item) 2 (Create New User) 3 (Display Items) 4 (Display Users) 5 (Calculate Cost) 6 (Display Orders)");
 					String selection = sc1.nextLine();
 					switch (selection) {
 					case "1":
@@ -78,6 +83,9 @@ public class TextInput implements Input {
 						break;
 					case "5":
 						calculateCost(sc1);
+						break;
+					case "6":
+						logic.displayOrders();
 						break;
 					default:
 						System.out.println("This is not a valid choice");
