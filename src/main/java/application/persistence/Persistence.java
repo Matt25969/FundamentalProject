@@ -16,9 +16,9 @@ public class Persistence {
 
 	private String environment;
 
-	private String jdbcUrl = "jdbc:mysql://localhost:3306/";
-	private String username = "";
-	private String password = "";
+	private String jdbcUrl = "jdbc:mysql://mysql:3306/";
+	private String username = "root";
+	private String password = "root";
 	private Connection connection;
 
 	public Persistence(String environment) {
@@ -119,7 +119,7 @@ public class Persistence {
 		Map<Integer, Order> orderMap = new HashMap<>();
 		try (Statement statement = getConnection().createStatement()) {
 			ResultSet rs = statement.executeQuery(
-					"SELECT o.id, o.userID, o.value, user.name FROM `Order` AS o INNER JOIN user ON user.ID=o.userID");
+					"SELECT o.id, o.userID, o.value, User.name FROM `Order` AS o INNER JOIN User ON User.ID=o.userID");
 			Order tempOrder = new Order();
 
 			while (rs.next()) {
